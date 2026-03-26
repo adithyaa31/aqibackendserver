@@ -1,0 +1,251 @@
+Extend the existing landing page into a full multi-page application with professional dashboard, calculator, research, and team pages.
+
+Maintain the same clean white Indian-themed UI.
+
+---
+
+📊 DASHBOARD PAGE (MAIN CORE PAGE)
+
+Design a modern dashboard similar to real AQI apps.
+
+1. HEADER SECTION
+
+* City name (dynamic)
+* Large AQI value (very prominent)
+* AQI status badge (Good / Moderate / Hazardous)
+
+---
+
+2. CITY LIST PANEL (LEFT OR TOP)
+
+* Show list of cities:
+  Delhi, Mumbai, Bangalore, Chennai, Kolkata
+
+* Each city shows:
+
+  * AQI value
+  * Color indicator
+
+* Click on city → updates dashboard dynamically
+
+---
+
+3. WEATHER DATA CARDS
+
+Display in a row:
+
+* Temperature 🌡️
+* Humidity 💨
+* Wind Speed 🌬️
+
+Use clean cards with icons
+
+---
+
+4. POLLUTANT DATA SECTION
+
+Display:
+
+* PM2.5
+* PM10
+* NO2
+* SO2
+* CO
+
+Use:
+
+* Progress bars or mini cards
+* Color-coded severity
+
+---
+
+5. GRAPH SECTION (IMPORTANT)
+
+Add two charts:
+
+* AQI Trend (Line Chart)
+  → last 7 days data
+
+* Pollutant Comparison (Bar Chart)
+
+Use Chart.js style layout (clean and minimal)
+
+---
+
+6. AI PREDICTION CARD
+
+* Title: “AI Prediction”
+
+Display:
+
+* Predicted AQI (next day)
+* Trend indicator (increase/decrease)
+
+Text:
+“Prediction based on regression model using environmental data”
+
+---
+
+7. CHEMICAL ANALYSIS CARD (UNIQUE)
+
+Title: “Why is AQI High?”
+
+Display:
+
+* Reasons:
+
+  * High PM2.5 due to vehicles
+  * Ozone formation from NO2 + sunlight
+  * Low wind causing pollutant trapping
+
+* Show chemical reactions:
+  NO2 + sunlight → O3
+  C + O2 → CO
+  S + O2 → SO2
+
+Keep simple and readable
+
+---
+
+8. HEALTH ADVISORY
+
+Display:
+
+* AQI < 50 → Safe
+* 100+ → Sensitive caution
+* 200+ → Wear mask
+* 300+ → Stay indoors
+
+Use icons + color indicators
+
+---
+
+🧮 CALCULATOR PAGE
+
+Create an interactive AQI calculator.
+
+1. INPUT FORM
+
+Fields:
+
+* Temperature (°C)
+* Humidity (%)
+* Wind Speed (km/h)
+
+---
+
+2. FORMULA SECTION (IMPORTANT)
+
+Display clearly:
+
+AQI = (0.5 × Temperature) + (0.3 × Humidity) − (0.4 × Wind Speed) + 50
+
+---
+
+3. OUTPUT SECTION
+
+After submit show:
+
+* Predicted AQI
+* AQI category
+* Chemical explanation
+
+---
+
+4. CHEMISTRY LOGIC
+
+Apply:
+
+* temp > 30 AND wind < 3 → Ozone formation
+* humidity > 70 → PM2.5 increase
+* wind < 3 → pollutant trapping
+
+Display explanation clearly
+
+---
+
+📑 RESEARCH PAGE (FULL DETAILED)
+
+Design like academic page.
+
+Title:
+“AI-Based AQI Prediction Using Environmental and Chemical Factors”
+
+---
+
+Sections:
+
+1. Problem Statement:
+   Air pollution in India is increasing due to vehicles, industries, and environmental conditions.
+
+2. Objective:
+   To predict AQI and analyze pollution causes using AI and chemistry.
+
+3. Methodology:
+
+* Data collected from dataset
+* Features: temperature, humidity, wind
+* Model: Linear Regression
+
+4. Formula:
+   AQI = w1*T + w2*H + w3*W + b
+
+5. Algorithm Steps:
+
+* Input environmental data
+* Apply regression model
+* Predict AQI
+* Analyze chemical causes
+
+6. Chemistry Integration:
+
+* NO2 + sunlight → O3
+* CO from incomplete combustion
+* SO2 from industrial emission
+
+7. Future Scope:
+
+* Random Forest
+* Deep Learning models
+
+---
+
+👨‍💻 TEAM PAGE
+
+Create clean modern cards for each member:
+
+* Adithya Sapkal
+* Aditiya
+* Amulya
+* Sinchana
+* Swarnava
+
+Each card includes:
+
+* Name
+* Role (optional)
+* Avatar placeholder
+
+Add hover animation
+
+---
+
+✨ UI/UX RULES
+
+* Maintain same theme across pages
+* Smooth transitions
+* Card-based layout
+* Proper spacing
+* Responsive design
+
+---
+
+🎯 FINAL GOAL
+
+The system should feel like:
+
+* A real AQI monitoring app
+* A smart AI system
+* A professional research-based platform
+
+Not a basic student project.
