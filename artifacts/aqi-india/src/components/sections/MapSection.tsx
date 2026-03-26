@@ -166,8 +166,8 @@ function IndiaMapBounds() {
       L.latLng(6.5, 68.0),
       L.latLng(37.5, 97.5)
     );
-    map.fitBounds(indiaBounds, { padding: [20, 20] });
-    map.setMaxBounds(indiaBounds.pad(0.3));
+    map.fitBounds(indiaBounds, { padding: [60, 60] });
+    map.setMaxBounds(indiaBounds.pad(0.5));
   }, [map]);
   return null;
 }
