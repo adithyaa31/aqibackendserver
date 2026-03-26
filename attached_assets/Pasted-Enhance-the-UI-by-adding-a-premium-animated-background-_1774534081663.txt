@@ -1,0 +1,122 @@
+Enhance the UI by adding a premium animated background and subtle Indian theme. Do not change layout or features. Only improve background visuals and animation.
+
+---
+
+🇮🇳 INDIAN THEME BACKGROUND
+
+* Apply a soft Indian tricolor gradient:
+
+  background: linear-gradient(
+  to bottom,
+  rgba(255,153,51,0.12),
+  rgba(255,255,255,1),
+  rgba(19,136,8,0.12)
+  );
+
+* Keep colors very subtle and clean (not bright)
+
+---
+
+🔵 ASHOKA CHAKRA (WATERMARK EFFECT)
+
+* Add a large Ashoka Chakra in background:
+
+  * Centered in hero section
+  * Very low opacity (0.03–0.05)
+  * Slight rotation animation (very slow)
+
+---
+
+🌫️ BACKGROUND PARTICLE ANIMATION (MAIN EFFECT)
+
+Create a full-screen animated particle system:
+
+* Use canvas or div-based particles
+
+* Small circular particles:
+
+  * Size: 1px to 3px
+  * Color: light gray / black
+  * Opacity: 0.05–0.15
+
+* Movement:
+
+  * Slowly float upward
+  * Slight random movement (left/right drift)
+
+* Density:
+
+  * Medium (not too many particles)
+
+* Speed:
+
+  * Very slow and smooth
+
+* Ensure:
+
+  * Animation runs behind UI (z-index: -1)
+  * Does not block clicks
+  * Performance optimized
+
+---
+
+🌫️ SMOKE / FOG OVERLAY (OPTIONAL)
+
+* Add very light fog effect using gradient overlay
+
+* Animate gently:
+
+  * TranslateY slight movement
+  * Very slow (10–15s loop)
+
+* Opacity should be extremely low
+
+---
+
+🔴 POLLUTION HEAT EFFECT (ADVANCED)
+
+For high AQI zones:
+
+* Add soft radial red glow behind map markers
+* Animate pulse:
+
+  * Expand + fade
+  * Repeat every 2 seconds
+
+---
+
+✨ PAGE LOAD ANIMATION
+
+* Entire page fades in smoothly
+* Duration: 0.8s – 1s
+* Slight upward motion
+
+---
+
+📍 MAP BACKGROUND ENHANCEMENT
+
+* Add subtle glow around India map
+* Slight shadow or blur for depth
+* Keep map clean and visible
+
+---
+
+⚡ PERFORMANCE RULES
+
+* Use lightweight animations only
+* Avoid heavy libraries
+* Keep FPS smooth
+* No lag or jitter
+
+---
+
+🎯 FINAL GOAL
+
+The background should feel like:
+
+* Air pollution visualized (floating particles)
+* Clean Indian identity 🇮🇳
+* Premium and modern UI
+* Subtle, not distracting
+
+Do not make the design flashy or cluttered.

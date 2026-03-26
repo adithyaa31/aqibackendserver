@@ -139,3 +139,27 @@
   background-image: radial-gradient(hsl(var(--muted-foreground)/0.1) 1px, transparent 1px);
   background-size: 24px 24px;
 }
+
+@keyframes chakra-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes page-fadein {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: page-fadein 0.7s ease both;
+}
+
+@keyframes fog-drift {
+  0%   { transform: translateY(0px) translateX(0px); opacity: 0.025; }
+  50%  { transform: translateY(-18px) translateX(8px); opacity: 0.04; }
+  100% { transform: translateY(0px) translateX(0px); opacity: 0.025; }
+}
+
+.fog-overlay {
+  animation: fog-drift 14s ease-in-out infinite;
+}
