@@ -1,37 +1,64 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { TrendingUp, AlertTriangle, Leaf } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+function CountUp({ target, duration = 1.5, trigger }: { target: number; duration?: number; trigger: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (v) => Math.round(v).toString());
+
+  useEffect(() => {
+    if (!trigger) return;
+    const ctrl = animate(count, target, { duration, ease: "easeOut" });
+    return ctrl.stop;
+  }, [trigger, target, duration]);
+
+  return <motion.span ref={ref}>{rounded}</motion.span>;
+}
 
 export function InfoCards() {
+  const [triggered, setTriggered] = useState(false);
+
   const cards = [
     {
       title: "Most Polluted City",
-      value: "Delhi",
-      subValue: "AQI 312",
+      city: "Delhi",
+      aqi: 312,
       icon: <AlertTriangle className="w-6 h-6 text-destructive" />,
       badge: "🔴 Hazardous",
-      gradient: "from-destructive/10 to-transparent",
-      borderColor: "border-destructive/20",
+      gradient: "from-red-500/10",
+      borderHover: "hover:border-red-300",
+      glowColor: "hover:shadow-red-200",
+      barColor: "bg-red-500",
+      barWidth: "95%",
       scrollId: "map-section",
     },
     {
       title: "Cleanest City",
-      value: "Bangalore",
-      subValue: "AQI 48",
+      city: "Bangalore",
+      aqi: 48,
       icon: <Leaf className="w-6 h-6 text-success" />,
       badge: "🟢 Good",
-      gradient: "from-success/10 to-transparent",
-      borderColor: "border-success/20",
+      gradient: "from-green-500/10",
+      borderHover: "hover:border-green-300",
+      glowColor: "hover:shadow-green-100",
+      barColor: "bg-green-500",
+      barWidth: "15%",
       scrollId: "map-section",
     },
     {
       title: "National Average",
-      value: "167",
-      subValue: "Moderate",
+      city: "167",
+      aqi: 167,
       icon: <TrendingUp className="w-6 h-6 text-warning" />,
       badge: "📈 Trending Up",
-      gradient: "from-warning/10 to-transparent",
-      borderColor: "border-warning/20",
+      gradient: "from-orange-500/10",
+      borderHover: "hover:border-orange-300",
+      glowColor: "hover:shadow-orange-100",
+      barColor: "bg-orange-400",
+      barWidth: "52%",
       scrollId: "features",
+      isAvg: true,
     },
   ];
 
@@ -46,32 +73,76 @@ export function InfoCards() {
                 const el = document.getElementById(card.scrollId);
                 if (el) el.scrollIntoView({ behavior: "smooth" });
               }}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              className={`bg-card rounded-2xl p-6 shadow-lg shadow-black/5 border ${card.borderColor} hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group text-left w-full cursor-pointer`}
+              viewport={{ once: true, amount: 0.3 }}
+              onViewportEnter={() => setTriggered(true)}
+              transition={{ delay: index * 0.12, duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`bg-card rounded-2xl p-6 shadow-md border border-border ${card.borderHover} ${card.glowColor} hover:shadow-xl transition-all duration-300 relative overflow-hidden group text-left w-full cursor-pointer`}
             >
-              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${card.gradient} rounded-bl-full opacity-50 group-hover:scale-110 transition-transform duration-500`}></div>
+              {/* Background gradient blob */}
+              <motion.div
+                className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl ${card.gradient} to-transparent rounded-bl-full`}
+                initial={{ scale: 1 }}
+                whileHover={{ scale: 1.2 }}
+                transition={{ duration: 0.4 }}
+              />
 
-              <div className="flex items-start justify-between mb-4 relative z-10">
-                <div className="p-3 bg-background rounded-xl border border-border/50 shadow-sm">
+              {/* Header row */}
+              <div className="flex items-start justify-between mb-5 relative z-10">
+                <motion.div
+                  className="p-3 bg-background rounded-xl border border-border/50 shadow-sm"
+                  whileHover={{ rotate: [0, -10, 10, 0] }}
+                  transition={{ duration: 0.4 }}
+                >
                   {card.icon}
-                </div>
+                </motion.div>
                 <span className="text-xs font-semibold px-2.5 py-1 bg-muted rounded-full text-foreground border border-border/50">
                   {card.badge}
                 </span>
               </div>
 
+              {/* Content */}
               <div className="relative z-10">
                 <h3 className="text-muted-foreground text-sm font-medium mb-1">{card.title}</h3>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-display font-bold text-foreground">{card.value}</p>
-                  <p className="text-sm font-semibold text-muted-foreground">{card.subValue}</p>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <p className="text-3xl font-display font-bold text-foreground">
+                    {card.isAvg ? (
+                      <CountUp target={card.aqi} trigger={triggered} />
+                    ) : (
+                      card.city
+                    )}
+                  </p>
+                  <p className="text-sm font-semibold text-muted-foreground">
+                    {card.isAvg ? "Moderate" : `AQI `}
+                    {!card.isAvg && (
+                      <span className="font-bold text-foreground">
+                        <CountUp target={card.aqi} trigger={triggered} />
+                      </span>
+                    )}
+                  </p>
                 </div>
-                <p className="text-xs text-primary font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+
+                {/* AQI progress bar */}
+                <div className="h-1.5 bg-muted rounded-full overflow-hidden mb-3">
+                  <motion.div
+                    className={`h-full rounded-full ${card.barColor}`}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: card.barWidth }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.2, delay: index * 0.15, ease: "easeOut" }}
+                  />
+                </div>
+
+                <motion.p
+                  className="text-xs text-primary font-semibold"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                >
                   View on map →
-                </p>
+                </motion.p>
               </div>
             </motion.button>
           ))}

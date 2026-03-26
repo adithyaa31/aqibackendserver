@@ -1,23 +1,47 @@
 import { AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 
+const ALERTS = [
+  "⚠️ Hazardous AQI 312 in Delhi — Wear masks, avoid outdoor activities",
+  "🟡 Moderate AQI 241 in Kolkata — Sensitive groups stay indoors",
+  "🟠 Unhealthy AQI 142 in Mumbai — Limit prolonged outdoor exertion",
+  "🟢 Good AQI 48 in Bangalore — Air quality is satisfactory",
+  "🟡 Moderate AQI 108 in Chennai — Keep windows closed",
+];
+
+const ticker = [...ALERTS, ...ALERTS];
+
 export function AlertBanner() {
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
+    <motion.div
+      initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5 }}
-      className="w-full bg-orange-50 border-b border-orange-200 py-3 px-4 relative overflow-hidden"
+      transition={{ delay: 0.4, duration: 0.5 }}
+      className="w-full bg-orange-50 border-b border-orange-200 py-2.5 overflow-hidden relative"
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/5 to-orange-500/0 animate-pulse"></div>
-      <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 relative z-10">
-        <div className="relative flex items-center justify-center">
-          <AlertTriangle className="w-5 h-5 text-orange-600 relative z-10" />
-          <div className="absolute inset-0 bg-orange-500/30 rounded-full blur-md animate-pulse-ring"></div>
+      {/* Gradient masks */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-orange-50 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-orange-50 to-transparent z-10 pointer-events-none" />
+
+      <div className="flex items-center gap-4 pl-4">
+        <div className="shrink-0 flex items-center gap-1.5 text-orange-700 z-20 pr-3 border-r border-orange-300">
+          <AlertTriangle className="w-4 h-4" />
+          <span className="text-xs font-bold uppercase tracking-widest whitespace-nowrap">Live Alerts</span>
         </div>
-        <p className="text-sm font-medium text-orange-800 text-center">
-          <span className="font-bold">⚠️ Hazardous AQI detected in Delhi</span> — Wear masks, avoid outdoor activities.
-        </p>
+
+        <div className="overflow-hidden flex-1">
+          <motion.div
+            className="flex gap-16 whitespace-nowrap"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+          >
+            {ticker.map((alert, i) => (
+              <span key={i} className="text-sm font-medium text-orange-800 shrink-0">
+                {alert}
+              </span>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </motion.div>
   );
