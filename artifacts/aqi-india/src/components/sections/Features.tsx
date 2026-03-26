@@ -17,14 +17,14 @@ export function Features() {
       title: "Chemical Analysis",
       description: "Detailed breakdown of pollutants including PM2.5, PM10, NO2, and SO2 to identify pollution sources instantly.",
       icon: <FlaskConical className="w-8 h-8 text-india-green" />,
-    }
+    },
   ];
 
   return (
-    <section className="py-24 bg-white">
+    <section id="features" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -39,7 +39,7 @@ export function Features() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {features.map((feature, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -51,9 +51,7 @@ export function Features() {
                 {feature.icon}
               </div>
               <h3 className="text-xl font-bold text-foreground mb-3 font-display">{feature.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {feature.description}
-              </p>
+              <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
             </motion.div>
           ))}
         </div>

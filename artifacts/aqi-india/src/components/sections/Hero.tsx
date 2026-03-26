@@ -1,14 +1,18 @@
 import { ArrowRight, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 
+const scrollTo = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth" });
+};
+
 export function Hero() {
   return (
-    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-tricolor-gradient">
-      {/* Background abstract map */}
+    <section id="hero" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-tricolor-gradient">
       <div className="absolute inset-0 z-0 flex items-center justify-center opacity-[0.03] pointer-events-none mix-blend-multiply">
-        <img 
-          src={`${import.meta.env.BASE_URL}images/india-map-abstract.png`} 
-          alt="India Map Texture" 
+        <img
+          src={`${import.meta.env.BASE_URL}images/india-map-abstract.png`}
+          alt="India Map Texture"
           className="w-[800px] h-[800px] object-contain"
         />
       </div>
@@ -25,7 +29,7 @@ export function Hero() {
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Live System Active</span>
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -35,7 +39,7 @@ export function Hero() {
             System – <span className="text-transparent bg-clip-text bg-gradient-to-r from-saffron via-primary to-india-green">India</span>
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -44,21 +48,21 @@ export function Hero() {
             Real-time Monitoring • AI Prediction • Chemical Analysis
           </motion.p>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <button 
-              onClick={() => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' })}
+            <button
+              onClick={() => scrollTo("map-section")}
               className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-foreground text-background hover:bg-primary shadow-xl shadow-foreground/10 hover:shadow-primary/25 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 group"
             >
               Explore Map
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button 
-              onClick={() => console.log('Learn More')}
+            <button
+              onClick={() => scrollTo("features")}
               className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-white border-2 border-border text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 flex items-center justify-center gap-2 hover:-translate-y-1"
             >
               <Activity className="w-5 h-5 text-muted-foreground" />

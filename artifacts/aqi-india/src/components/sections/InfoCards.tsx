@@ -10,7 +10,8 @@ export function InfoCards() {
       icon: <AlertTriangle className="w-6 h-6 text-destructive" />,
       badge: "🔴 Hazardous",
       gradient: "from-destructive/10 to-transparent",
-      borderColor: "border-destructive/20"
+      borderColor: "border-destructive/20",
+      scrollId: "map-section",
     },
     {
       title: "Cleanest City",
@@ -19,7 +20,8 @@ export function InfoCards() {
       icon: <Leaf className="w-6 h-6 text-success" />,
       badge: "🟢 Good",
       gradient: "from-success/10 to-transparent",
-      borderColor: "border-success/20"
+      borderColor: "border-success/20",
+      scrollId: "map-section",
     },
     {
       title: "National Average",
@@ -28,25 +30,30 @@ export function InfoCards() {
       icon: <TrendingUp className="w-6 h-6 text-warning" />,
       badge: "📈 Trending Up",
       gradient: "from-warning/10 to-transparent",
-      borderColor: "border-warning/20"
-    }
+      borderColor: "border-warning/20",
+      scrollId: "features",
+    },
   ];
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section id="dashboard" className="py-20 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {cards.map((card, index) => (
-            <motion.div
+            <motion.button
               key={index}
+              onClick={() => {
+                const el = document.getElementById(card.scrollId);
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              className={`bg-card rounded-2xl p-6 shadow-lg shadow-black/5 border ${card.borderColor} hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group`}
+              className={`bg-card rounded-2xl p-6 shadow-lg shadow-black/5 border ${card.borderColor} hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group text-left w-full cursor-pointer`}
             >
               <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${card.gradient} rounded-bl-full opacity-50 group-hover:scale-110 transition-transform duration-500`}></div>
-              
+
               <div className="flex items-start justify-between mb-4 relative z-10">
                 <div className="p-3 bg-background rounded-xl border border-border/50 shadow-sm">
                   {card.icon}
@@ -55,15 +62,18 @@ export function InfoCards() {
                   {card.badge}
                 </span>
               </div>
-              
+
               <div className="relative z-10">
                 <h3 className="text-muted-foreground text-sm font-medium mb-1">{card.title}</h3>
                 <div className="flex items-baseline gap-2">
                   <p className="text-3xl font-display font-bold text-foreground">{card.value}</p>
                   <p className="text-sm font-semibold text-muted-foreground">{card.subValue}</p>
                 </div>
+                <p className="text-xs text-primary font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  View on map →
+                </p>
               </div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       </div>
