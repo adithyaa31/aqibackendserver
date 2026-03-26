@@ -1,0 +1,13 @@
+packages:
+  "framer-motion": "For premium smooth animations, page transitions, and scroll reveals."
+  "clsx": "For conditional class merging in UI components."
+  "tailwind-merge": "For merging tailwind classes safely."
+
+images:
+  - path: "artifacts/aqi-india/public/images/india-map-abstract.png"
+    description: "A highly abstract, minimal, very subtle, light gray outline/mesh of the India map on a pure white background. It should look like a faint background texture for a premium tech landing page. Extremely low contrast."
+    aspect_ratio: "1:1"
+
+notes:
+  - This is a static landing page implementation.
+  - Using Framer Motion for all interaction polish and reveal animations.

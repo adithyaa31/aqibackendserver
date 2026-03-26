@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "AQI India - Air Quality Intelligence System"
+version = "1.0.0"
+id = "artifacts/aqi-india"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18599
+
+[services.development]
+run = "pnpm --filter @workspace/aqi-india run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/aqi-india", "run", "build" ]
+publicDir = "artifacts/aqi-india/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18599"
+BASE_PATH = "/"

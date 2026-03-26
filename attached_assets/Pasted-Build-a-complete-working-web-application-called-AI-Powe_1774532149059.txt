@@ -1,0 +1,225 @@
+Build a complete working web application called:
+
+“AI-Powered Air Quality Intelligence System – India 🇮🇳”
+
+This project must combine:
+
+* Real dataset (from Kaggle CSV)
+* Machine Learning model (Linear Regression)
+* Interactive web dashboard
+* India map-based city selection
+* Chemical analysis logic
+
+---
+
+📁 PROJECT STRUCTURE
+
+Create:
+
+* app.py (Flask backend)
+* templates/
+
+  * index.html
+  * dashboard.html
+  * calculator.html
+  * research.html
+* static/
+
+  * style.css
+  * script.js
+* dataset.csv (Kaggle dataset)
+
+---
+
+⚙️ BACKEND (Flask)
+
+1. Load dataset (CSV using pandas)
+
+2. Preprocess data:
+
+* Handle missing values
+* Select features:
+
+  * temperature
+  * humidity
+  * wind speed
+* Target:
+
+  * AQI
+
+3. Train ML model:
+
+* Use Linear Regression from sklearn
+
+Example:
+
+* X = [temp, humidity, wind]
+* y = AQI
+
+4. Create routes:
+
+/ → Home page (map)
+/dashboard/<city> → show city data
+/predict → handle AQI prediction (POST request)
+/calculator → input page
+
+---
+
+🤖 MACHINE LEARNING
+
+Train model like:
+
+* model.fit(X, y)
+
+Prediction:
+
+* model.predict([temp, humidity, wind])
+
+Return predicted AQI to frontend
+
+---
+
+📊 DATA HANDLING
+
+* Extract city-wise data from dataset
+* Create dictionary for cities:
+  Delhi, Mumbai, Bangalore, Chennai, Kolkata
+
+Each city should have:
+
+* AQI
+* temp
+* humidity
+* wind
+* pollutants (PM2.5, NO2, etc.)
+
+---
+
+🌍 FRONTEND (index.html)
+
+* Clean white UI with Indian theme
+* Add India map background
+* Place markers for cities
+
+Features:
+
+* Hover → show AQI
+* Click → redirect to /dashboard/<city>
+
+---
+
+📊 DASHBOARD PAGE
+
+Display:
+
+* City name
+* AQI (big + color-coded)
+* Weather data
+* Pollutants
+
+Add charts using Chart.js:
+
+* AQI trend
+* Pollutant comparison
+
+---
+
+🧪 CHEMICAL ANALYSIS LOGIC
+
+Implement rule-based logic:
+
+* If temp > 30 AND wind < 3:
+  → Ozone formation
+
+* If humidity > 70:
+  → PM2.5 increase
+
+* If wind < 3:
+  → pollutant trapping
+
+Display explanation:
+
+Also show reactions:
+
+* NO2 + sunlight → O3
+* C + O2 → CO
+* S + O2 → SO2
+
+---
+
+🧮 AQI CALCULATOR PAGE
+
+Create form:
+
+Inputs:
+
+* Temperature
+* Humidity
+* Wind
+
+On submit:
+
+* Send data to Flask (/predict)
+* Return:
+
+  * Predicted AQI
+  * Chemical reason
+
+---
+
+🚨 HEALTH ADVISORY
+
+Based on AQI:
+
+* <50 → Safe
+* 100+ → Sensitive caution
+* 200+ → Wear mask
+* 300+ → Stay indoors
+
+---
+
+📑 RESEARCH PAGE
+
+Include:
+
+* Problem statement
+
+* ML model (Linear Regression)
+
+* Formula:
+  AQI = w1*T + w2*H + w3*W + b
+
+* Algorithm steps
+
+* Why project chosen
+
+---
+
+🎨 UI REQUIREMENTS
+
+* White background
+* Indian theme colors (saffron, green, navy)
+* Card-based layout
+* Smooth animations
+* Clean spacing
+
+---
+
+🎯 FINAL GOAL
+
+The system should:
+
+* Load real dataset
+* Train ML model
+* Allow user interaction
+* Predict AQI
+* Explain pollution using chemistry
+* Look like a real product
+
+---
+
+Ensure:
+
+* Code is clean
+* Proper comments added
+* Easy to run in Replit
