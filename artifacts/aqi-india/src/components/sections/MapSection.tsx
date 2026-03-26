@@ -54,6 +54,48 @@ const CITIES = [
     prediction: "Improving",
     pulse: false,
   },
+  {
+    id: "hyderabad",
+    name: "Hyderabad",
+    aqi: 94,
+    status: "Satisfactory",
+    color: "#84cc16",
+    lat: 17.385,
+    lng: 78.4867,
+    pm25: 38,
+    pm10: 72,
+    o3: 22,
+    prediction: "Stable over next 24h",
+    pulse: false,
+  },
+  {
+    id: "ahmedabad",
+    name: "Ahmedabad",
+    aqi: 178,
+    status: "Moderate",
+    color: "#f97316",
+    lat: 23.0225,
+    lng: 72.5714,
+    pm25: 88,
+    pm10: 142,
+    o3: 35,
+    prediction: "Slight improvement expected",
+    pulse: false,
+  },
+  {
+    id: "kolkata",
+    name: "Kolkata",
+    aqi: 241,
+    status: "Poor",
+    color: "#dc2626",
+    lat: 22.5726,
+    lng: 88.3639,
+    pm25: 132,
+    pm10: 198,
+    o3: 51,
+    prediction: "Worsening due to low wind speed",
+    pulse: true,
+  },
 ];
 
 function createCityIcon(color: string, aqi: number, pulse: boolean) {
@@ -213,16 +255,18 @@ export function MapSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="flex flex-wrap items-center justify-center gap-6 mt-8"
+          className="flex flex-wrap items-center justify-center gap-4 mt-8"
         >
           {[
             { label: "Good (0–50)", color: "#22c55e" },
-            { label: "Moderate (51–150)", color: "#eab308" },
+            { label: "Satisfactory (51–100)", color: "#84cc16" },
+            { label: "Moderate (101–200)", color: "#f97316" },
+            { label: "Poor (201–300)", color: "#dc2626" },
             { label: "Hazardous (300+)", color: "#ef4444" },
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-2">
               <div
-                className="w-3 h-3 rounded-full"
+                className="w-3 h-3 rounded-full flex-shrink-0"
                 style={{ background: item.color }}
               />
               <span className="text-sm text-muted-foreground font-medium">{item.label}</span>
