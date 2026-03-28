@@ -2,11 +2,15 @@ import { AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 
 const ALERTS = [
-  "⚠️ Hazardous AQI 312 in Delhi — Wear masks, avoid outdoor activities",
-  "🟡 Moderate AQI 241 in Kolkata — Sensitive groups stay indoors",
-  "🟠 Unhealthy AQI 142 in Mumbai — Limit prolonged outdoor exertion",
-  "🟢 Good AQI 48 in Bangalore — Air quality is satisfactory",
-  "🟡 Moderate AQI 108 in Chennai — Keep windows closed",
+  "🔴 Poor AQI 260 in Patna — Avoid outdoor activity, wear masks",
+  "🔴 Poor AQI 250 in Delhi — Limit outdoor exertion, stay indoors",
+  "🔴 Poor AQI 220 in Jaipur — Sensitive groups should stay indoors",
+  "🟠 Moderate AQI 190 in Kolkata — Keep windows closed",
+  "🟠 Moderate AQI 180 in Mumbai — Limit prolonged outdoor activity",
+  "🟠 Moderate AQI 165 in Chennai — Sensitive groups take caution",
+  "🟠 Moderate AQI 160 in Hyderabad — Monitor air quality",
+  "🟡 Satisfactory AQI 100 in Bangalore — Air quality is acceptable",
+  "🟢 Good AQI 40 in Aizawl — Air quality is excellent",
 ];
 
 const ticker = [...ALERTS, ...ALERTS];
