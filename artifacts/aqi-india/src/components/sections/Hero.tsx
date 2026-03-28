@@ -42,7 +42,7 @@ export function Hero() {
         >
           {/* Live badge */}
           <motion.div variants={item} className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border/60 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border/60 shadow-sm">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
@@ -101,7 +101,7 @@ export function Hero() {
               onClick={() => scrollTo("features")}
               whileHover={{ scale: 1.04, y: -3 }}
               whileTap={{ scale: 0.97 }}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-white border-2 border-border text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-card border-2 border-border text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Activity className="w-5 h-5 text-muted-foreground" />
               Learn More
@@ -121,7 +121,7 @@ export function Hero() {
               <motion.div
                 key={stat.label}
                 whileHover={{ scale: 1.06 }}
-                className="bg-white/80 backdrop-blur-sm border border-border/50 rounded-2xl px-4 py-3 text-center shadow-sm cursor-default"
+                className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl px-4 py-3 text-center shadow-sm cursor-default"
               >
                 <div className="flex justify-center mb-1">{stat.icon}</div>
                 <p className="text-xl font-extrabold font-display text-foreground">

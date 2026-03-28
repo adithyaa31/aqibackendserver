@@ -8,7 +8,7 @@ const features = [
     description: "Live data aggregation from ground sensors and ISRO satellite feeds ensuring 99.9% accuracy across all major Indian cities.",
     icon: <Satellite className="w-8 h-8" />,
     iconColor: "text-primary",
-    iconBg: "bg-blue-50 border-blue-200",
+    iconBg: "bg-blue-100/30 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800",
     glowColor: "hover:shadow-blue-100",
     href: "/dashboard",
     tag: "Live",
@@ -50,7 +50,7 @@ const cardVariants = {
 
 export function Features() {
   return (
-    <section id="features" className="py-24 bg-white">
+    <section id="features" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Heading */}
@@ -104,7 +104,7 @@ export function Features() {
               key={feature.title}
               variants={cardVariants}
               whileHover={{ y: -8, scale: 1.02 }}
-              className={`group bg-white rounded-3xl p-8 border border-border/60 shadow-sm hover:shadow-xl ${feature.glowColor} transition-all duration-300 flex flex-col`}
+              className={`group bg-card rounded-3xl p-8 border border-border/60 shadow-sm hover:shadow-xl ${feature.glowColor} transition-all duration-300 flex flex-col`}
             >
               {/* Icon */}
               <div className="flex items-start justify-between mb-6">

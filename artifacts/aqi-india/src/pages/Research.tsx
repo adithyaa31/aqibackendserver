@@ -12,7 +12,7 @@ function Section({ icon, title, children, delay = 0 }: {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay }}
-      className="bg-white rounded-3xl p-8 shadow-sm border border-border/50"
+      className="bg-card rounded-3xl p-8 shadow-sm border border-border/50"
     >
       <div className="flex items-center gap-3 mb-5">
         <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -37,7 +37,7 @@ export default function Research() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8f9fb]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
 
@@ -139,7 +139,7 @@ export default function Research() {
                   { sym: "w₃", val: "−0.4", label: "Wind weight" },
                   { sym: "b", val: "50", label: "Bias constant" },
                 ].map((c) => (
-                  <div key={c.sym} className="bg-white rounded-xl p-3 text-center border border-border/50">
+                  <div key={c.sym} className="bg-card rounded-xl p-3 text-center border border-border/50">
                     <span className="text-lg font-mono font-bold text-primary">{c.sym} = {c.val}</span>
                     <p className="text-xs text-muted-foreground mt-0.5">{c.label}</p>
                   </div>

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ParticleBackground } from "@/components/ui/ParticleBackground";
 import { AshokaBg } from "@/components/ui/AshokaBg";
 import { ChatBot } from "@/components/ui/ChatBot";
+import { ThemeProvider } from "@/lib/ThemeContext";
 import LandingPage from "@/pages/LandingPage";
 import Dashboard from "@/pages/Dashboard";
 import CalculatorPage from "@/pages/Calculator";
@@ -58,6 +59,7 @@ function AnimatedRoutes() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
       <TooltipProvider>
         {/* Global background layers — behind everything */}
         <AshokaBg />
@@ -86,6 +88,7 @@ function App() {
         <ChatBot />
         <Toaster />
       </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

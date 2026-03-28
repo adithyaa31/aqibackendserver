@@ -87,7 +87,7 @@ export default function Dashboard() {
     : ["Air quality is in an acceptable range. Minor pollutants may affect very sensitive individuals."];
 
   return (
-    <div className="min-h-screen bg-[#f8f9fb]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
 
@@ -102,7 +102,7 @@ export default function Dashboard() {
                 className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
                   selectedCity === c
                     ? "bg-foreground text-background border-foreground shadow-md"
-                    : "bg-white text-muted-foreground border-border hover:border-primary hover:text-primary"
+                    : "bg-card text-muted-foreground border-border hover:border-primary hover:text-primary"
                 }`}
               >
                 {c}
@@ -119,7 +119,7 @@ export default function Dashboard() {
           key={selectedCity}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl p-8 shadow-sm border border-border/50 mb-6"
+          className="bg-card rounded-3xl p-8 shadow-sm border border-border/50 mb-6"
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
@@ -162,7 +162,7 @@ export default function Dashboard() {
           <div className="lg:col-span-2 space-y-6">
             {/* AQI Trend */}
             <motion.div key={`trend-${selectedCity}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="bg-white rounded-3xl p-6 shadow-sm border border-border/50"
+              className="bg-card rounded-3xl p-6 shadow-sm border border-border/50"
             >
               <h2 className="font-display font-bold text-lg text-foreground mb-6">AQI Trend — Last 7 Days</h2>
               <ResponsiveContainer width="100%" height={220}>
@@ -179,7 +179,7 @@ export default function Dashboard() {
 
             {/* Pollutant Bar Chart */}
             <motion.div key={`bar-${selectedCity}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }} className="bg-white rounded-3xl p-6 shadow-sm border border-border/50"
+              transition={{ delay: 0.1 }} className="bg-card rounded-3xl p-6 shadow-sm border border-border/50"
             >
               <h2 className="font-display font-bold text-lg text-foreground mb-6">Pollutant Comparison (µg/m³)</h2>
               <ResponsiveContainer width="100%" height={200}>
@@ -194,7 +194,7 @@ export default function Dashboard() {
             </motion.div>
 
             {/* Pollutant progress bars */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-border/50">
+            <div className="bg-card rounded-3xl p-6 shadow-sm border border-border/50">
               <h2 className="font-display font-bold text-lg text-foreground mb-6">Pollutant Levels</h2>
               <div className="space-y-4">
                 {pollutantBars.map((p) => <PollutantBar key={p.label} {...p} />)}
@@ -205,7 +205,7 @@ export default function Dashboard() {
           {/* Right: Info cards */}
           <div className="space-y-6">
             {/* AI Prediction */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-border/50">
+            <div className="bg-card rounded-3xl p-6 shadow-sm border border-border/50">
               <h2 className="font-display font-bold text-lg text-foreground mb-4">🤖 AI Prediction</h2>
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-5xl font-extrabold font-display" style={{ color: city.color }}>
@@ -225,7 +225,7 @@ export default function Dashboard() {
             </div>
 
             {/* Chemical Analysis */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-border/50">
+            <div className="bg-card rounded-3xl p-6 shadow-sm border border-border/50">
               <h2 className="font-display font-bold text-lg text-foreground mb-4">🧪 Why is AQI High?</h2>
               <ul className="space-y-2 mb-4">
                 {chemReasons.map((r, i) => (
@@ -243,7 +243,7 @@ export default function Dashboard() {
             </div>
 
             {/* Health Advisory */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-border/50">
+            <div className="bg-card rounded-3xl p-6 shadow-sm border border-border/50">
               <h2 className="font-display font-bold text-lg text-foreground mb-4">🏥 Health Advisory</h2>
               <div className="space-y-2">
                 {[

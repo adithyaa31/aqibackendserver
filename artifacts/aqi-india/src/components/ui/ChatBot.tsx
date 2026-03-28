@@ -304,7 +304,7 @@ function TypingIndicator() {
       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-india-green flex items-center justify-center shrink-0 shadow-sm">
         <Bot className="w-4 h-4 text-white" />
       </div>
-      <div className="bg-white border border-border/50 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+      <div className="bg-card border border-border/50 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
         <div className="flex gap-1.5 items-center h-4">
           {[0, 1, 2].map((i) => (
             <motion.div
@@ -484,7 +484,7 @@ export function ChatBot() {
               animate={{ opacity: 1, y: 0,  scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="absolute bottom-0 right-0 w-[370px] bg-[#f8f9fb] rounded-3xl shadow-2xl shadow-black/20 border border-border/50 overflow-hidden flex flex-col"
+              className="absolute bottom-0 right-0 w-[370px] bg-background rounded-3xl shadow-2xl shadow-black/20 border border-border/50 overflow-hidden flex flex-col"
               style={{ height: "580px" }}
             >
               {/* Header */}
@@ -544,7 +544,7 @@ export function ChatBot() {
                     <button
                       key={s}
                       onClick={() => sendMessage(s)}
-                      className="shrink-0 text-xs px-3 py-1.5 bg-white border border-border/60 rounded-full text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all whitespace-nowrap"
+                      className="shrink-0 text-xs px-3 py-1.5 bg-card border border-border/60 rounded-full text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all whitespace-nowrap"
                     >
                       {s}
                     </button>
@@ -562,7 +562,7 @@ export function ChatBot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask about any city…"
-                  className="flex-1 bg-white border border-border/60 rounded-2xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                  className="flex-1 bg-card border border-border/60 rounded-2xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
                 />
                 <motion.button
                   type="submit"

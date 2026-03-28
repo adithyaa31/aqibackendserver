@@ -85,7 +85,7 @@ export function MapSection() {
   const [selectedCity, setSelectedCity] = useState<CityEntry | null>(null);
 
   return (
-    <section id="map-section" className="py-24 bg-white relative">
+    <section id="map-section" className="py-24 bg-background relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.h2

@@ -71,7 +71,7 @@ export default function CalculatorPage() {
   const status = result ? getAQIStatus(result.aqi) : null;
 
   return (
-    <div className="min-h-screen bg-[#f8f9fb]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
 
@@ -93,7 +93,7 @@ export default function CalculatorPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-3xl p-6 shadow-sm border border-border/50 mb-6"
+          className="bg-card rounded-3xl p-6 shadow-sm border border-border/50 mb-6"
         >
           <h2 className="font-display font-bold text-lg text-foreground mb-4">📐 Prediction Formula</h2>
           <div className="bg-gradient-to-r from-primary/5 to-india-green/5 border border-primary/20 rounded-2xl p-5 text-center">
@@ -121,7 +121,7 @@ export default function CalculatorPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-3xl p-8 shadow-sm border border-border/50 mb-6"
+          className="bg-card rounded-3xl p-8 shadow-sm border border-border/50 mb-6"
         >
           <h2 className="font-display font-bold text-lg text-foreground mb-6">Enter Environmental Data</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
@@ -172,7 +172,7 @@ export default function CalculatorPage() {
               className="space-y-6"
             >
               {/* AQI Result */}
-              <div className={`bg-white rounded-3xl p-8 shadow-sm border-2 ${status.bg} text-center`}>
+              <div className={`bg-card rounded-3xl p-8 shadow-sm border-2 ${status.bg} text-center`}>
                 <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Predicted AQI</p>
                 <div className="text-9xl font-extrabold font-display leading-none mb-3" style={{ color: status.color }}>
                   {result.aqi}
@@ -183,7 +183,7 @@ export default function CalculatorPage() {
               </div>
 
               {/* Chemical Analysis */}
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-border/50">
+              <div className="bg-card rounded-3xl p-6 shadow-sm border border-border/50">
                 <div className="flex items-center gap-2 mb-4">
                   <FlaskConical className="w-5 h-5 text-purple-500" />
                   <h2 className="font-display font-bold text-lg text-foreground">Chemical Analysis</h2>

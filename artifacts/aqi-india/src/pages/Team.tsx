@@ -48,7 +48,7 @@ const MEMBERS = [
 
 export default function Team() {
   return (
-    <div className="min-h-screen bg-[#f8f9fb]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
 
@@ -73,7 +73,7 @@ export default function Team() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ y: -6 }}
-              className="bg-white rounded-3xl p-8 shadow-sm border border-border/50 hover:shadow-xl hover:shadow-black/8 transition-all duration-300 group"
+              className="bg-card rounded-3xl p-8 shadow-sm border border-border/50 hover:shadow-xl hover:shadow-black/8 transition-all duration-300 group"
             >
               {/* Avatar */}
               <div className="flex justify-center mb-6">
