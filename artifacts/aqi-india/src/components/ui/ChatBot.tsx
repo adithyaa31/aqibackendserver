@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Bot, RefreshCw } from "lucide-react";
-import { CITIES_DATA, CITY_NAMES } from "@/lib/cityData";
 
 /* ─────────────────────────── types ─────────────────────────── */
 interface Message {
@@ -23,276 +22,215 @@ interface SessionContext {
 const now = () =>
   new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
 
+function detectCity(text: string): string | null {
+  const t = text.toLowerCase();
+  return cityAQIData.map((x) => x.city).find((c) => t.includes(c.toLowerCase())) ?? null;
+}
+
+const cityAQIData = [
+  { city: "Delhi", aqi: 250 },
+  { city: "Mumbai", aqi: 180 },
+  { city: "Bangalore", aqi: 100 },
+  { city: "Chennai", aqi: 165 },
+  { city: "Jaipur", aqi: 220 },
+  { city: "Patna", aqi: 260 },
+];
+
+const cityLookup = new Map(cityAQIData.map((c) => [c.city.toLowerCase(), c]));
+
+function detectCities(text: string): string[] {
+  const t = text.toLowerCase();
+  return cityAQIData.map((x) => x.city).filter((c) => t.includes(c.toLowerCase()));
+}
+
+function getAQICategory(aqi: number): string {
+  if (aqi <= 50) return "Good";
+  if (aqi <= 100) return "Satisfactory";
+  if (aqi <= 150) return "Moderate";
+  if (aqi <= 200) return "Poor";
+  if (aqi <= 300) return "Very Poor";
+  return "Hazardous";
+}
+
 function aqiEmoji(aqi: number) {
-  if (aqi <= 50)  return "🟢";
+  if (aqi <= 50) return "🟢";
   if (aqi <= 100) return "🟡";
   if (aqi <= 200) return "🟠";
   if (aqi <= 300) return "🔴";
   return "🚨";
 }
 
-function aqiRisk(aqi: number) {
-  if (aqi <= 50)  return "Low";
-  if (aqi <= 100) return "Low-Moderate";
-  if (aqi <= 150) return "Moderate";
-  if (aqi <= 200) return "High";
-  if (aqi <= 300) return "Very High";
-  return "Hazardous";
+function precautionsByAqi(aqi: number): string {
+  if (aqi <= 50) return "Air is clean. Normal outdoor activity is safe.";
+  if (aqi <= 100) return "Generally safe, but sensitive people should avoid long outdoor exertion.";
+  if (aqi <= 150) return "Limit prolonged outdoor activity. Mask is recommended for sensitive groups.";
+  if (aqi <= 200) return "Reduce outdoor time, avoid heavy exercise outside, and wear an N95 mask.";
+  if (aqi <= 300) return "Very poor air. Stay indoors as much as possible and use an air purifier if available.";
+  return "Hazardous air. Avoid going outside unless necessary and use strict respiratory protection.";
 }
 
-function predict(aqi: number) {
-  if (aqi > 250) return aqi + Math.round(10 + Math.random() * 15);
-  if (aqi > 200) return aqi + Math.round(5  + Math.random() * 12);
-  if (aqi > 150) return aqi + Math.round(-5 + Math.random() * 10);
-  return Math.max(20, aqi + Math.round(-10 + Math.random() * 8));
+const getPrecautions = precautionsByAqi;
+
+function predictTomorrowAqi(aqi: number): number {
+  const delta = aqi > 250 ? 12 : aqi > 200 ? 8 : aqi > 150 ? 4 : -3;
+  const noise = Math.round((Math.random() - 0.5) * 10);
+  return Math.max(20, Math.min(500, aqi + delta + noise));
 }
 
-function bestTimeOutdoor(aqi: number) {
-  if (aqi <= 100) return "anytime — air quality is fine all day";
-  if (aqi <= 150) return "early morning (6–8 AM) when traffic is low";
-  if (aqi <= 200) return "early morning (5–7 AM) before peak pollution";
-  return "try to avoid going outside entirely";
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function maskAdvice(aqi: number, sensitive: boolean) {
-  if (aqi <= 100 && !sensitive) return "No mask needed.";
-  if (aqi <= 150) return sensitive ? "Wear N95 mask." : "Mask optional but recommended.";
-  if (aqi <= 200) return "Wear N95/KN95 mask outdoors.";
-  return "N95 mask is essential. Even indoors, consider an air purifier.";
+function cityData(city: string) {
+  return cityLookup.get(city.toLowerCase()) || null;
 }
 
-function detectCity(text: string): string | null {
-  const t = text.toLowerCase();
-  return (
-    CITY_NAMES.find((c) => t.includes(c.toLowerCase())) ?? null
-  );
-}
-
-function detectCities(text: string): string[] {
-  const t = text.toLowerCase();
-  return CITY_NAMES.filter((c) => t.includes(c.toLowerCase()));
-}
-
-/* ─────────────────────────── response engine ─────────────────────────── */
-function generateResponse(input: string, ctx: SessionContext): { text: string; newCtx: Partial<SessionContext> } {
-  const t = input.toLowerCase().trim();
+function getBotResponse(input: string, ctx: SessionContext): { text: string; newCtx: Partial<SessionContext> } {
+  const text = input.toLowerCase().trim();
   const newCtx: Partial<SessionContext> = {};
 
-  // ── Health profile detection ──
-  if (/breath|asthma|lung|respiratory/i.test(t)) {
+  if (/breath|asthma|lung|respiratory/i.test(text)) {
     newCtx.userHasBreathingIssues = true;
-    newCtx.userHasAsthma = /asthma/i.test(t);
+    newCtx.userHasAsthma = /asthma/i.test(text);
   }
-  if (/child|kid|baby|toddler/i.test(t)) newCtx.userIsChild = true;
-  if (/elder|old|senior|grandpa|grandma/i.test(t)) newCtx.userIsElderly = true;
+  if (/child|kid|baby|toddler/i.test(text)) newCtx.userIsChild = true;
+  if (/elder|old|senior|grandpa|grandma/i.test(text)) newCtx.userIsElderly = true;
 
-  const sensitive =
-    ctx.userHasBreathingIssues || ctx.userHasAsthma ||
-    ctx.userIsChild || ctx.userIsElderly ||
-    /breath|asthma|lung|child|elder/i.test(t);
-
-  // ── Greeting ──
-  if (/^(hi|hello|hey|namaste|hola|yo|sup)\b/i.test(t)) {
+  if (/^(hi|hello|hey|namaste)\b/i.test(text)) {
     return {
-      text: `Hey! 👋 I'm AQI-Bot, your air quality assistant for India 🇮🇳\n\nI can help you with:\n• 📍 AQI for any of 15 cities\n• 📈 Tomorrow's AQI prediction\n• ⚖️ City comparisons\n• 🏥 Health recommendations\n• 🌬️ Pollution analysis\n\nJust ask! Try: *"How's Delhi air today?"* or *"Compare Mumbai and Bangalore"*`,
+      text: pick([
+        "Hey! 👋 I'm AQI-Bot. Ask me about city AQI, health advice, comparisons, chemistry, or tomorrow trends.",
+        "Hi there! I can help with AQI in major Indian cities, pollution effects, precautions, and formula explanations.",
+      ]),
       newCtx,
     };
   }
 
-  // ── Help / capabilities ──
-  if (/help|what can you|features|capabilities/i.test(t)) {
+  if (/what is this project|about this project|project purpose|how does your system work|system work/i.test(text)) {
     return {
-      text: `Here's what I can do 🤖\n\n🏙️ *City AQI* — "AQI in Patna"\n📈 *Prediction* — "Tomorrow's AQI in Delhi"\n⚖️ *Compare* — "Compare Jaipur and Bangalore"\n🏥 *Health* — "Is it safe for asthma patients in Mumbai?"\n🏆 *Rankings* — "Which city has best air?"\n🌡️ *Pollutants* — "PM2.5 levels in Chennai"\n💊 *Advice* — "Should I wear a mask in Kolkata?"\n\nWhat would you like to know?`,
+      text: "This is an Air Quality Intelligence System for India 🇮🇳. It combines AQI data, pollutant understanding, health guidance, and trend estimation so users can take practical daily decisions.",
       newCtx,
     };
   }
 
-  // ── List all cities / rankings ──
-  if (/best.*air|cleanest|safest|top.*city|which.*city.*good|rank/i.test(t)) {
-    const sorted = CITY_NAMES
-      .map((c) => ({ c, aqi: CITIES_DATA[c].aqi }))
-      .sort((a, b) => a.aqi - b.aqi);
-    const top3 = sorted.slice(0, 3).map((x) => `${aqiEmoji(x.aqi)} ${x.c} — AQI ${x.aqi}`).join("\n");
-    const worst3 = sorted.slice(-3).reverse().map((x) => `${aqiEmoji(x.aqi)} ${x.c} — AQI ${x.aqi}`).join("\n");
+  if (/what is aqi|how aqi is calculated|aqi formula|explain aqi|how is aqi calculated/i.test(text)) {
     return {
-      text: `🏆 *Best air quality right now:*\n${top3}\n\n⚠️ *Most polluted:*\n${worst3}\n\nAizawl in Mizoram has the cleanest air in our dataset! Great place if you have respiratory issues 🌿`,
+      text: "AQI is a single number representing air quality severity.\n\nIt is computed pollutant-wise using CPCB interpolation:\nI = ((I_hi - I_lo)/(C_hi - C_lo)) * (C - C_lo) + I_lo\n\nFinal AQI = maximum sub-index among pollutants, and that pollutant is the dominant pollutant.",
       newCtx,
     };
   }
 
-  // ── Compare two cities ──
-  const cities = detectCities(t);
-  if ((cities.length >= 2 && /compar|vs|versus|or|better|worse/i.test(t)) || cities.length === 2) {
+  if (/most polluted|worst air|highest aqi/i.test(text)) {
+    const worst = cityAQIData
+      .sort((a, b) => b.aqi - a.aqi)[0];
+    newCtx.lastCity = worst.city;
+    return {
+      text: `${aqiEmoji(worst.aqi)} ${worst.city} is currently the most polluted city in this dataset (AQI ${worst.aqi}, ${getAQICategory(worst.aqi)}). ${getPrecautions(worst.aqi)}`,
+      newCtx,
+    };
+  }
+
+  if (/cleanest city|least polluted|best air|lowest aqi/i.test(text)) {
+    const cleanest = [...cityAQIData].sort((a, b) => a.aqi - b.aqi)[0];
+    newCtx.lastCity = cleanest.city;
+    return {
+      text: pick([
+        `${aqiEmoji(cleanest.aqi)} ${cleanest.city} is the cleanest right now in this dataset (AQI ${cleanest.aqi}).`,
+        `${cleanest.city} has the lowest AQI currently (${cleanest.aqi}), so air quality is relatively better 👍`,
+      ]),
+      newCtx,
+    };
+  }
+
+  const cities = detectCities(text);
+  if (cities.length >= 2 && /compare|vs|versus|better|worse|which is better|or/i.test(text)) {
     const [c1, c2] = cities;
-    const d1 = CITIES_DATA[c1], d2 = CITIES_DATA[c2];
-    const better = d1.aqi < d2.aqi ? c1 : c2;
-    const worse  = d1.aqi < d2.aqi ? c2 : c1;
-    const diff   = Math.abs(d1.aqi - d2.aqi);
+    const d1 = cityData(c1);
+    const d2 = cityData(c2);
+    if (!d1 || !d2) return { text: "Try comparing two supported cities like Delhi and Mumbai.", newCtx };
+    const better = d1.aqi <= d2.aqi ? c1 : c2;
+    const worse = d1.aqi > d2.aqi ? c1 : c2;
     newCtx.lastCity = better;
     return {
-      text: `⚖️ *${c1} vs ${c2}*\n\n${aqiEmoji(d1.aqi)} ${c1} — AQI **${d1.aqi}** (${d1.status})\n${aqiEmoji(d2.aqi)} ${c2} — AQI **${d2.aqi}** (${d2.status})\n\n✅ **${better}** has better air quality by ${diff} AQI points.\n\n${
-        sensitive
-          ? `🏥 *For you specifically:* ${better} is the right choice. The AQI difference of ${diff} points matters a lot for sensitive groups.`
-          : `If you're planning to travel, ${better} is the safer pick right now.`
-      }`,
+      text:
+        `Comparison: ${c1} vs ${c2}\n` +
+        `${aqiEmoji(d1.aqi)} ${c1}: AQI ${d1.aqi} (${getAQICategory(d1.aqi)})\n` +
+        `${aqiEmoji(d2.aqi)} ${c2}: AQI ${d2.aqi} (${getAQICategory(d2.aqi)})\n\n` +
+        `${better} has better air today. ${worse} needs more caution.`,
       newCtx,
     };
   }
 
-  // ── PM2.5 / pollutant specific query ──
-  if (/pm2\.?5|pm10|no2|so2|co |ozone|pollutant/i.test(t)) {
-    const city = detectCity(t) || ctx.lastCity;
-    if (city && CITIES_DATA[city]) {
-      const d = CITIES_DATA[city];
-      newCtx.lastCity = city;
+  if (/what about tomorrow|tomorrow aqi|tomorrow|forecast|prediction|will pollution increase|trend/i.test(text)) {
+    const city = detectCity(text) || ctx.lastCity;
+    if (!city) return { text: "Tell me a city name for tomorrow AQI prediction 😊", newCtx };
+    const d = cityData(city);
+    if (!d) return { text: "I can predict for Delhi, Mumbai, Bangalore, Chennai, Jaipur, or Patna.", newCtx };
+    const tomorrow = predictTomorrowAqi(d.aqi);
+    newCtx.lastCity = city;
+    return {
+      text:
+        `For ${city}, today's AQI is ${d.aqi}. Tomorrow may be around ${tomorrow} (smart trend estimate).\n` +
+        `${tomorrow > d.aqi ? "It may get slightly worse 📈." : "It may improve a bit 📉."}`,
+      newCtx,
+    };
+  }
+
+  if (/health effects|effects of pollution|health advice|health|safe|mask|precaution|go out|outdoor|play outside/i.test(text)) {
+    const city = detectCity(text) || ctx.lastCity;
+    if (!city) {
       return {
-        text: `🧪 *Pollutant breakdown for ${city}:*\n\n• PM2.5: **${d.pm25} µg/m³** ${d.pm25 > 60 ? "⚠️ High" : "✅"}\n• PM10: **${d.pm10} µg/m³** ${d.pm10 > 100 ? "⚠️ High" : "✅"}\n• NO₂: **${d.no2} µg/m³** ${d.no2 > 40 ? "⚠️ High" : "✅"}\n• SO₂: **${d.so2} µg/m³** ${d.so2 > 20 ? "⚠️ High" : "✅"}\n• CO: **${d.co} mg/m³** ${d.co > 2 ? "⚠️ High" : "✅"}\n\n${d.pm25 > 60 ? "PM2.5 is particularly dangerous — it penetrates deep into lungs. Wear N95 mask! 😷" : "Pollutant levels are relatively manageable today."}`,
+        text: "Pollution can cause eye irritation, coughing, breathing discomfort, and long-term lung stress. Share your city for specific safety advice.",
         newCtx,
       };
     }
-  }
-
-  // ── Tomorrow / prediction query ──
-  if (/tomorrow|predict|next day|forecast/i.test(t)) {
-    const city = detectCity(t) || ctx.lastCity;
-    if (!city) {
-      return { text: "Which city's prediction do you want? Try: *'Tomorrow AQI in Delhi'* 🌆", newCtx };
-    }
-    const d = CITIES_DATA[city];
-    const pred = predict(d.aqi);
-    const trend = pred > d.aqi ? "📈 worsening" : "📉 improving";
+    const d = cityData(city);
+    if (!d) return { text: "Share one of these cities: Delhi, Mumbai, Bangalore, Chennai, Jaipur, Patna.", newCtx };
     newCtx.lastCity = city;
-    return {
-      text: `📈 *AQI Prediction for ${city}*\n\nToday: ${aqiEmoji(d.aqi)} AQI **${d.aqi}** (${d.status})\nTomorrow: ${aqiEmoji(pred)} AQI **${pred}** — ${trend}\n\n${
-        pred > 250
-          ? `🚨 *Emergency Warning:* Tomorrow looks really bad for ${city}. Stock up on N95 masks and run your air purifier. Avoid all outdoor activity.`
-          : pred > 200
-          ? `⚠️ *Health Alert:* Air quality may deteriorate tomorrow. Plan indoor activities and keep windows shut.`
-          : pred > 150
-          ? `Stay cautious tomorrow. Best to go out early morning and avoid peak hours.`
-          : `Tomorrow looks ${pred < d.aqi ? "slightly better 🌿" : "about the same"} in ${city}.`
-      }`,
-      newCtx,
-    };
+    return { text: `Health advice for ${city} (AQI ${d.aqi}, ${getAQICategory(d.aqi)}): ${getPrecautions(d.aqi)}`, newCtx };
   }
 
-  // ── Mask / safety query ──
-  if (/mask|safe.*go out|should i go|outdoor|exercise outside/i.test(t)) {
-    const city = detectCity(t) || ctx.lastCity;
-    if (!city) {
-      return { text: "Tell me your city and I'll give mask & outdoor advice! Try: *'Is it safe to go out in Mumbai?'*", newCtx };
-    }
-    const d = CITIES_DATA[city];
-    newCtx.lastCity = city;
-    return {
-      text: `🏃 *Outdoor Safety — ${city}*\n\nAQI: ${aqiEmoji(d.aqi)} **${d.aqi}** (${d.status})\n\n😷 Mask: ${maskAdvice(d.aqi, sensitive)}\n⏰ Best time out: ${bestTimeOutdoor(d.aqi)}\n${
-        d.aqi > 150
-          ? `🏠 Prefer indoor exercise today.\n🌬️ Keep windows closed & use air purifier if possible.`
-          : `🌳 Light outdoor activity is okay. Avoid dusty or busy roads.`
-      }${
-        sensitive
-          ? `\n\n🏥 *For sensitive groups:* Extra caution advised even at moderate AQI levels. Carry your inhaler/medication.`
-          : ""
-      }`,
-      newCtx,
-    };
-  }
-
-  // ── Weather / wind / humidity query ──
-  if (/weather|wind|humidity|temperature|temp\b/i.test(t)) {
-    const city = detectCity(t) || ctx.lastCity;
-    if (!city) {
-      return { text: "Which city's weather data do you need? 🌤️", newCtx };
-    }
-    const d = CITIES_DATA[city];
-    newCtx.lastCity = city;
-    return {
-      text: `🌤️ *Weather in ${city}*\n\n🌡️ Temperature: **${d.temp}°C**\n💧 Humidity: **${d.humidity}%**\n🌬️ Wind Speed: **${d.wind} km/h**\n\n${
-        d.wind < 3
-          ? `Low wind speed is trapping pollutants near the ground — one reason AQI is high here. 😶‍🌫️`
-          : d.wind > 6
-          ? `Good wind is helping disperse pollutants. That's partly why ${city} has cleaner air. 🌿`
-          : `Moderate wind conditions today.`
-      }`,
-      newCtx,
-    };
-  }
-
-  // ── "What about tomorrow?" follow-up ──
-  if (/what about|how about|and (tomorrow|next|prediction)/i.test(t) && ctx.lastCity) {
-    const city = ctx.lastCity;
-    const d = CITIES_DATA[city];
-    const pred = predict(d.aqi);
-    return {
-      text: `For **${city}** tomorrow: ${aqiEmoji(pred)} AQI **${pred}** — ${pred > d.aqi ? "trending worse 📈" : "slight improvement 📉"}\n\n${pred > 200 ? "⚠️ Stay cautious — conditions remain unhealthy." : "Should be manageable if you take precautions."}`,
-      newCtx,
-    };
-  }
-
-  // ── Breathing issues context ──
-  if (sensitive && !detectCity(t) && /issue|problem|affect|bad for me|safe for me/i.test(t)) {
-    const city = ctx.lastCity;
-    if (city) {
-      const d = CITIES_DATA[city];
+  if (/what is smog|smog|acid rain|role of no2|no2|chemistry/i.test(text)) {
+    if (/acid rain/.test(text)) {
       return {
-        text: `🏥 *Health Advisory for sensitive groups — ${city}*\n\nAQI: ${aqiEmoji(d.aqi)} **${d.aqi}** (${d.status})\n\n${
-          d.aqi > 200
-            ? `🚨 This is NOT safe for you. Stay indoors with windows shut. Use an air purifier. Carry your medication.`
-            : d.aqi > 100
-            ? `⚠️ Use N95 mask if you must go outside. Limit outdoor time to under 30 mins. Avoid parks near roads.`
-            : `✅ Air is manageable but still wear a light mask if you're sensitive.`
-        }\n\n💊 Keep rescue medication handy. Consult your doctor if you experience symptoms.`,
+        text: "Acid rain forms when pollutants like SO2 and NO2 react with water vapor to form acids in the atmosphere. It can damage crops, water bodies, and buildings.",
         newCtx,
       };
     }
-  }
-
-  // ── Single city AQI lookup (main use case) ──
-  const city = detectCity(t) || ((/aqi|air|quality|pollution|how is|how's|today/i.test(t)) ? ctx.lastCity : null);
-  if (city && CITIES_DATA[city]) {
-    const d = CITIES_DATA[city];
-    const pred = predict(d.aqi);
-    const risk = aqiRisk(d.aqi);
-    newCtx.lastCity = city;
-
-    let healthNote = "";
-    if (sensitive && d.aqi > 100) {
-      healthNote = `\n\n🏥 *For your health condition:* ${
-        d.aqi > 200
-          ? "Please stay indoors. This level is dangerous for you."
-          : "Limit exposure. Wear N95 mask if you must go outside."
-      }`;
+    if (/role of no2|no2/.test(text)) {
+      return {
+        text: "NO2 is a harmful gas from vehicles and combustion sources. It irritates lungs and also participates in reactions that create ozone and secondary pollutants.",
+        newCtx,
+      };
     }
-
-    let alert = "";
-    if (d.aqi > 300) alert = `\n\n🚨 *Emergency Warning:* Hazardous air! Everyone should avoid outdoor activities.`;
-    else if (d.aqi > 200) alert = `\n\n⚠️ *Health Alert:* Unhealthy for all groups. Mask up!`;
-
-    const tone = d.aqi > 250
-      ? `Bro, ${city} air is really bad today 😷 Stay safe!`
-      : d.aqi > 150
-      ? `${city} isn't great today — take some precautions.`
-      : d.aqi > 100
-      ? `${city} is moderate. Nothing alarming but be mindful.`
-      : `${city} is breathing easy today! 🌿`;
-
     return {
-      text: `${aqiEmoji(d.aqi)} *${city} — Live AQI*\n\n${tone}\n\n📊 AQI: **${d.aqi}** (${d.status})\n⚠️ Risk Level: **${risk}**\n📈 Trend: ${d.trend === "up" ? "Worsening 📈" : "Improving 📉"}\n🔮 Tomorrow: ~${pred} AQI\n\n⏰ Best outdoor time: ${bestTimeOutdoor(d.aqi)}\n😷 Mask: ${maskAdvice(d.aqi, sensitive)}${alert}${healthNote}`,
+      text: "Smog is a polluted haze formed by particulate matter and chemical reactions in air, especially when emissions are high and wind is low.",
       newCtx,
     };
   }
 
-  // ── Breathing issues without city ──
-  if (/breath|asthma|lung|child|elder|sensitive/i.test(t)) {
+  const city = detectCity(text) || (/aqi|air|pollution|quality/.test(text) ? ctx.lastCity : null);
+  if (city) {
+    const d = cityData(city);
+    if (!d) return { text: "I currently track Delhi, Mumbai, Bangalore, Chennai, Jaipur, and Patna.", newCtx };
+    newCtx.lastCity = city;
+    const cityLine =
+      d.aqi > 220
+        ? `${city} air is really bad today 😷`
+        : d.aqi > 140
+        ? `${city} has concerning pollution today.`
+        : `${city} is moderate, still relatively okay 👍`;
     return {
-      text: `Got it — I'll give you extra-cautious advice 🏥\n\nYour health profile is noted. Now tell me which city you're in and I'll give personalized safety recommendations!\n\nTry: *"Is Delhi safe for me?"*`,
+      text:
+        `${aqiEmoji(d.aqi)} ${cityLine}\n` +
+        `AQI: ${d.aqi} (${getAQICategory(d.aqi)})\n` +
+        `Precaution: ${getPrecautions(d.aqi)}`,
       newCtx,
     };
   }
 
-  // ── Fallback ──
   return {
-    text: `Hmm, I didn't catch that 🤔 I'm specialized in India's air quality!\n\nTry asking:\n• *"AQI in Delhi"*\n• *"Compare Mumbai and Bangalore"*\n• *"Is it safe to run outside in Chennai?"*\n• *"Tomorrow's forecast for Patna"*\n• *"Which city has the best air?"*`,
+    text: "Try asking about AQI, cities, or health advice 😊",
     newCtx,
   };
 }
@@ -420,9 +358,9 @@ export function ChatBot() {
       setInput("");
       setTyping(true);
 
-      const delay = 600 + Math.random() * 700;
+      const delay = 500 + Math.random() * 500;
       setTimeout(() => {
-        const { text: reply, newCtx } = generateResponse(trimmed, ctx);
+        const { text: reply, newCtx } = getBotResponse(trimmed, ctx);
         setCtx((c) => ({ ...c, ...newCtx }));
         const botMsg: Message = { id: (Date.now() + 1).toString(), role: "bot", text: reply, time: now() };
         setMessages((m) => [...m, botMsg]);

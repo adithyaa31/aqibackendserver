@@ -1,6 +1,7 @@
 export function getAQIColor(aqi: number): string {
   if (aqi <= 50)  return "#22c55e";
   if (aqi <= 100) return "#84cc16";
+  if (aqi <= 150) return "#eab308";
   if (aqi <= 200) return "#f97316";
   if (aqi <= 300) return "#ef4444";
   return "#7f1d1d";
@@ -9,8 +10,9 @@ export function getAQIColor(aqi: number): string {
 export function getAQIStatus(aqi: number): string {
   if (aqi <= 50)  return "Good";
   if (aqi <= 100) return "Satisfactory";
-  if (aqi <= 200) return "Moderate";
-  if (aqi <= 300) return "Poor";
+  if (aqi <= 150) return "Moderate";
+  if (aqi <= 200) return "Poor";
+  if (aqi <= 300) return "Very Poor";
   return "Hazardous";
 }
 
@@ -74,6 +76,21 @@ const RAW: {
   { city: "Jaipur",    aqi: 220, temp: 35, humidity: 45, wind: 2.4, lat: 26.9124, lng:  75.7873 },
   { city: "Delhi",     aqi: 250, temp: 34, humidity: 52, wind: 2.1, lat: 28.6139, lng:  77.2090 },
   { city: "Patna",     aqi: 260, temp: 33, humidity: 68, wind: 1.8, lat: 25.5941, lng:  85.1376 },
+  { city: "Solapur",   aqi: 120, temp: 32, humidity: 51, wind: 3.9, lat: 17.6599, lng:  75.9064 },
+  { city: "Belagavi",  aqi:  90, temp: 28, humidity: 64, wind: 5.1, lat: 15.8497, lng:  74.4977 },
+  { city: "Kochi",     aqi:  85, temp: 30, humidity: 79, wind: 4.8, lat:  9.9312, lng:  76.2673 },
+  { city: "Thiruvananthapuram", aqi: 80, temp: 29, humidity: 81, wind: 5.4, lat: 8.5241, lng: 76.9366 },
+  { city: "Jabalpur",  aqi: 140, temp: 31, humidity: 57, wind: 3.7, lat: 23.1815, lng:  79.9864 },
+  { city: "Jamshedpur",aqi: 160, temp: 32, humidity: 66, wind: 3.2, lat: 22.8046, lng:  86.2029 },
+  { city: "Ahmedabad", aqi: 105, temp: 34, humidity: 49, wind: 3.5, lat: 23.0225, lng:  72.5714 },
+  { city: "Rajkot",    aqi: 130, temp: 33, humidity: 47, wind: 3.6, lat: 22.3039, lng:  70.8022 },
+  { city: "Jhansi",    aqi: 170, temp: 35, humidity: 44, wind: 2.9, lat: 25.4484, lng:  78.5685 },
+  { city: "Kanpur",    aqi: 190, temp: 34, humidity: 55, wind: 2.5, lat: 26.4499, lng:  80.3319 },
+  { city: "Bareilly",  aqi: 180, temp: 32, humidity: 58, wind: 2.8, lat: 28.3670, lng:  79.4304 },
+  { city: "Bhubaneswar", aqi: 160, temp: 31, humidity: 71, wind: 3.3, lat: 20.2961, lng: 85.8245 },
+  { city: "Visakhapatnam", aqi: 110, temp: 30, humidity: 73, wind: 4.2, lat: 17.6868, lng: 83.2185 },
+  { city: "Raipur",    aqi: 150, temp: 33, humidity: 60, wind: 3.1, lat: 21.2514, lng:  81.6296 },
+  { city: "Prayagraj", aqi: 175, temp: 34, humidity: 53, wind: 2.7, lat: 25.4358, lng:  81.8463 },
 ];
 
 export const CITIES_DATA: Record<string, CityData> = Object.fromEntries(
